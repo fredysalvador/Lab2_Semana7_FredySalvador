@@ -218,59 +218,59 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btimportActionPerformed
 
     private void btExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExportar1ActionPerformed
-  /*  // Obtener el modelo de la tabla
-DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+       // Obtener el modelo de la tabla
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-// Crear una lista para almacenar los datos de la tabla
-List<Map<String, Object>> data = new ArrayList<>();
+    // Crear un StringBuilder para construir el contenido del archivo
+    StringBuilder txtData = new StringBuilder();
 
-// Recorrer las filas de la tabla
-for (int row = 0; row < model.getRowCount(); row++) {
-    // Crear un mapa para almacenar los datos de cada fila
-    Map<String, Object> item = new HashMap<>();
-    
-    // Recorrer las columnas de la tabla
-    for (int column = 0; column < model.getColumnCount(); column++) {
-        // Obtener el nombre de la columna y el valor de la celda
-        String columnName = model.getColumnName(column);
-        Object value = model.getValueAt(row, column);
-        
-        // Agregar el nombre de la columna y el valor al mapa
-        item.put(columnName, value);
+    // Recorrer las filas de la tabla
+    for (int row = 0; row < model.getRowCount(); row++) {
+        // Recorrer las columnas de la tabla
+        for (int column = 0; column < model.getColumnCount(); column++) {
+            // Obtener el nombre de la columna
+            String columnName = model.getColumnName(column);
+
+            // Obtener el valor de la celda
+            Object value = model.getValueAt(row, column);
+
+            // Agregar el nombre de la columna y el valor al StringBuilder
+            txtData.append("\"").append(columnName).append("\": \"").append(value).append("\", ");
+        }
+
+        // Eliminar la coma extra al final de cada elemento
+        txtData.delete(txtData.length() - 2, txtData.length());
+
+        txtData.append("\n");
     }
-    
-    // Agregar el mapa a la lista
-    data.add(item);
-}
 
-// Obtener el texto en formato de archivo .txt
-StringBuilder txtData = new StringBuilder();
+    // Crear un diálogo de archivo para guardar el archivo
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Guardar archivo");
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de texto (*.txt)", "txt"));
 
-for (Map<String, Object> item : data) {
-    txtData.append("{");
-    
-    for (String key : item.keySet()) {
-        Object value = item.get(key);
-        txtData.append("\"").append(key).append("\": ").append(value).append(", ");
+    int userSelection = fileChooser.showSaveDialog(this);
+
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+        // Agregar la extensión .txt si no está presente
+        if (!filePath.toLowerCase().endsWith(".txt")) {
+            filePath += ".txt";
+        }
+
+        // Escribir los datos en el archivo
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(txtData.toString());
+
+            // Mostrar mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Exportación exitosa");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            // Mostrar mensaje de error
+            JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    
-    // Eliminar la coma extra al final de cada elemento
-    txtData.delete(txtData.length() - 2, txtData.length());
-    
-    txtData.append("}\n");
-}
-
-// Escribir los datos en el archivo
-try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-    bw.write(txtData.toString());
-    
-    // Mostrar mensaje de éxito
-    JOptionPane.showMessageDialog(this, "Exportación exitosa");
-} catch (IOException ex) {
-    ex.printStackTrace();
-    // Mostrar mensaje de error
-    JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
-}*/
     }//GEN-LAST:event_btExportar1ActionPerformed
 
     /**
