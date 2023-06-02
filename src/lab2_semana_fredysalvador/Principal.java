@@ -55,7 +55,7 @@ public class Principal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        btExportar2 = new javax.swing.JButton();
         btagregarfila = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -138,7 +138,12 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable3);
 
-        jButton3.setText("Exportar Datos");
+        btExportar2.setText("Exportar Datos");
+        btExportar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExportar2ActionPerformed(evt);
+            }
+        });
 
         btagregarfila.setText("Agregar Fila");
         btagregarfila.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +162,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btagregarfila, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btExportar2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -168,7 +173,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                    .addComponent(btExportar2, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                     .addComponent(btagregarfila, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(48, 48, 48))
         );
@@ -289,6 +294,64 @@ public class Principal extends javax.swing.JFrame {
         model.addRow(new Object[model.getColumnCount()]);
     }//GEN-LAST:event_btagregarfilaActionPerformed
 
+    private void btExportar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExportar2ActionPerformed
+        // TODO add your handling code here:
+         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+
+        // Crear un StringBuilder para construir el contenido del archivo
+        StringBuilder txtData = new StringBuilder();
+
+        // Obtener los nombres de las columnas
+        int columnCount = model.getColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            txtData.append(model.getColumnName(i));
+            if (i < columnCount - 1) {
+                txtData.append(",");
+            }
+        }
+        txtData.append("\n");
+
+        // Obtener los datos de la tabla
+        int rowCount = model.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                txtData.append(model.getValueAt(i, j));
+                if (j < columnCount - 1) {
+                    txtData.append(",");
+                }
+            }
+            txtData.append("\n");
+        }
+
+        // Crear un diálogo de archivo para guardar el archivo
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar archivo");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de texto (*.txt)", "txt"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+            // Agregar la extensión .txt si no está presente
+            if (!filePath.toLowerCase().endsWith(".txt")) {
+                filePath += ".txt";
+            }
+
+            // Escribir los datos en el archivo
+            try (FileWriter fileWriter = new FileWriter(filePath)) {
+                fileWriter.write(txtData.toString());
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(this, "Exportación exitosa");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                // Mostrar mensaje de error
+                JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btExportar2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -326,9 +389,9 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btExportar1;
+    private javax.swing.JButton btExportar2;
     private javax.swing.JButton btagregarfila;
     private javax.swing.JButton btimport;
-    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

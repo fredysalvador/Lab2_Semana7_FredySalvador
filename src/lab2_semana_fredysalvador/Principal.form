@@ -183,7 +183,7 @@
                           <Group type="102" attributes="0">
                               <Component id="btagregarfila" min="-2" pref="138" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton3" min="-2" pref="185" max="-2" attributes="0"/>
+                              <Component id="btExportar2" min="-2" pref="185" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane3" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
@@ -198,7 +198,7 @@
                       <Component id="jScrollPane3" min="-2" pref="233" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jButton3" pref="73" max="32767" attributes="0"/>
+                          <Component id="btExportar2" pref="73" max="32767" attributes="0"/>
                           <Component id="btagregarfila" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
@@ -230,10 +230,13 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButton3">
+            <Component class="javax.swing.JButton" name="btExportar2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exportar Datos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btExportar2ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btagregarfila">
               <Properties>
