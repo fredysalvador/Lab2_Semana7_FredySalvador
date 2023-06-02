@@ -3,7 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package lab2_semana_fredysalvador;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 /**
  *
  * @author Fredy Salvador
@@ -15,8 +30,13 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        
+        
+        
     }
 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,8 +50,8 @@ public class Principal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btExportar1 = new javax.swing.JButton();
+        btimport = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
@@ -41,17 +61,14 @@ public class Principal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "id", "name", "category", "price", "aisle", "bin"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -60,9 +77,19 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Exportar Datos");
+        btExportar1.setText("Exportar .JSON");
+        btExportar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExportar1ActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Actualizar Tabla");
+        btimport.setText("Importar .TXT");
+        btimport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btimportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -70,13 +97,13 @@ public class Principal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btimport, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(215, 215, 215)
+                        .addComponent(btExportar1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,8 +112,8 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btExportar1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btimport, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51))
         );
 
@@ -158,6 +185,94 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimportActionPerformed
+        // TODO add your handling code here:
+        // Crea un JFileChooser
+    JFileChooser fileChooser = new JFileChooser();
+
+    // Configura el filtro de archivos para mostrar solo archivos .txt
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
+    fileChooser.setFileFilter(filter);
+
+    // Muestra el diálogo de selección de archivo
+    int result = fileChooser.showOpenDialog(this);
+
+    // Si se selecciona un archivo
+    if (result == JFileChooser.APPROVE_OPTION) {
+        // Obtén el archivo seleccionado
+        File selectedFile = fileChooser.getSelectedFile();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+            String line;
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+            // Lee el archivo línea por línea y agrega los datos a la tabla
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                model.addRow(data);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    }//GEN-LAST:event_btimportActionPerformed
+
+    private void btExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExportar1ActionPerformed
+  /*  // Obtener el modelo de la tabla
+DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+// Crear una lista para almacenar los datos de la tabla
+List<Map<String, Object>> data = new ArrayList<>();
+
+// Recorrer las filas de la tabla
+for (int row = 0; row < model.getRowCount(); row++) {
+    // Crear un mapa para almacenar los datos de cada fila
+    Map<String, Object> item = new HashMap<>();
+    
+    // Recorrer las columnas de la tabla
+    for (int column = 0; column < model.getColumnCount(); column++) {
+        // Obtener el nombre de la columna y el valor de la celda
+        String columnName = model.getColumnName(column);
+        Object value = model.getValueAt(row, column);
+        
+        // Agregar el nombre de la columna y el valor al mapa
+        item.put(columnName, value);
+    }
+    
+    // Agregar el mapa a la lista
+    data.add(item);
+}
+
+// Obtener el texto en formato de archivo .txt
+StringBuilder txtData = new StringBuilder();
+
+for (Map<String, Object> item : data) {
+    txtData.append("{");
+    
+    for (String key : item.keySet()) {
+        Object value = item.get(key);
+        txtData.append("\"").append(key).append("\": ").append(value).append(", ");
+    }
+    
+    // Eliminar la coma extra al final de cada elemento
+    txtData.delete(txtData.length() - 2, txtData.length());
+    
+    txtData.append("}\n");
+}
+
+// Escribir los datos en el archivo
+try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+    bw.write(txtData.toString());
+    
+    // Mostrar mensaje de éxito
+    JOptionPane.showMessageDialog(this, "Exportación exitosa");
+} catch (IOException ex) {
+    ex.printStackTrace();
+    // Mostrar mensaje de error
+    JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
+}*/
+    }//GEN-LAST:event_btExportar1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -194,8 +309,8 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btExportar1;
+    private javax.swing.JButton btimport;
     private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
