@@ -77,7 +77,7 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        btExportar1.setText("Exportar .JSON");
+        btExportar1.setText("Exportar a JSON ");
         btExportar1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btExportar1ActionPerformed(evt);
