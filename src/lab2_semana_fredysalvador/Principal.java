@@ -203,89 +203,111 @@ public class Principal extends javax.swing.JFrame {
     private void btimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimportActionPerformed
         // TODO add your handling code here:
         // Crea un JFileChooser
-    JFileChooser fileChooser = new JFileChooser();
+   JFileChooser fileChooser = new JFileChooser();
 
-    // Configura el filtro de archivos para mostrar solo archivos .txt
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
-    fileChooser.setFileFilter(filter);
+// Configura el filtro de archivos para mostrar solo archivos .txt
+FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
+fileChooser.setFileFilter(filter);
 
-    // Muestra el diálogo de selección de archivo
-    int result = fileChooser.showOpenDialog(this);
+// Muestra el diálogo de selección de archivo
+int result = fileChooser.showOpenDialog(this);
 
-    // Si se selecciona un archivo
-    if (result == JFileChooser.APPROVE_OPTION) {
-        // Obtén el archivo seleccionado
-        File selectedFile = fileChooser.getSelectedFile();
+// Si se selecciona un archivo
+if (result == JFileChooser.APPROVE_OPTION) {
+    // Obtén el archivo seleccionado
+    File selectedFile = fileChooser.getSelectedFile();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-            String line;
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+        String line;
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        boolean omitirPrimeraFila = true; // Variable para omitir la primera fila
 
-            // Lee el archivo línea por línea y agrega los datos a la tabla
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                model.addRow(data);
+        // Lee el archivo línea por línea y agrega los datos a la tabla
+        while ((line = br.readLine()) != null) {
+            if (omitirPrimeraFila) {
+                omitirPrimeraFila = false;
+                continue; // Omitir la primera fila
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+
+            String[] data = line.split(",");
+            model.addRow(data);
         }
+    } catch (IOException ex) {
+        ex.printStackTrace();
     }
+}
     }//GEN-LAST:event_btimportActionPerformed
 
     private void btExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExportar1ActionPerformed
-       // Obtener el modelo de la tabla
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+ // Obtener el modelo de la tabla
+DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-    // Crear un StringBuilder para construir el contenido del archivo
-    StringBuilder txtData = new StringBuilder();
+// Crear un StringBuilder para construir el contenido del archivo
+StringBuilder txtData = new StringBuilder();
 
-    // Recorrer las filas de la tabla
-    for (int row = 0; row < model.getRowCount(); row++) {
-        // Recorrer las columnas de la tabla
-        for (int column = 0; column < model.getColumnCount(); column++) {
-            // Obtener el nombre de la columna
-            String columnName = model.getColumnName(column);
+// Agregar el primer corchete al inicio del archivo
+txtData.append("[\n");
 
-            // Obtener el valor de la celda
-            Object value = model.getValueAt(row, column);
+// Recorrer las filas de la tabla
+for (int row = 0; row < model.getRowCount(); row++) {
+    // Agregar el segundo corchete al inicio de cada objeto
+    txtData.append("{");
 
-            // Agregar el nombre de la columna y el valor al StringBuilder
-            txtData.append("\"").append(columnName).append("\": \"").append(value).append("\", ");
-        }
+    // Recorrer las columnas de la tabla
+    for (int column = 0; column < model.getColumnCount(); column++) {
+        // Obtener el nombre de la columna
+        String columnName = model.getColumnName(column);
 
-        // Eliminar la coma extra al final de cada elemento
-        txtData.delete(txtData.length() - 2, txtData.length());
+        // Obtener el valor de la celda
+        Object value = model.getValueAt(row, column);
 
-        txtData.append("\n");
+        // Agregar el nombre de la columna y el valor al StringBuilder
+        txtData.append("\"").append(columnName).append("\": \"").append(value).append("\", ");
     }
 
-    // Crear un diálogo de archivo para guardar el archivo
-    JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Guardar archivo");
-    fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de texto (*.txt)", "txt"));
+    // Eliminar la coma extra al final de cada elemento
+    txtData.delete(txtData.length() - 2, txtData.length());
 
-    int userSelection = fileChooser.showSaveDialog(this);
+    // Agregar el segundo corchete al final de cada objeto
+    txtData.append("}\n");
+}
 
-    if (userSelection == JFileChooser.APPROVE_OPTION) {
-        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+// Eliminar el último salto de línea
+if (model.getRowCount() > 0) {
+    txtData.delete(txtData.length() - 1, txtData.length());
+}
 
-        // Agregar la extensión .txt si no está presente
-        if (!filePath.toLowerCase().endsWith(".txt")) {
-            filePath += ".txt";
-        }
+// Agregar el último corchete al final del archivo
+txtData.append("]");
 
-        // Escribir los datos en el archivo
-        try (FileWriter fileWriter = new FileWriter(filePath)) {
-            fileWriter.write(txtData.toString());
+// Crear un diálogo de archivo para guardar el archivo
+JFileChooser fileChooser = new JFileChooser();
+fileChooser.setDialogTitle("Guardar archivo");
+fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos de texto (*.txt)", "txt"));
 
-            // Mostrar mensaje de éxito
-            JOptionPane.showMessageDialog(this, "Exportación exitosa");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            // Mostrar mensaje de error
-            JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+int userSelection = fileChooser.showSaveDialog(this);
+
+if (userSelection == JFileChooser.APPROVE_OPTION) {
+    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+    // Agregar la extensión .txt si no está presente
+    if (!filePath.toLowerCase().endsWith(".txt")) {
+        filePath += ".txt";
     }
+
+    // Escribir los datos en el archivo
+    try (FileWriter fileWriter = new FileWriter(filePath)) {
+        fileWriter.write(txtData.toString());
+
+        // Mostrar mensaje de éxito
+        JOptionPane.showMessageDialog(this, "Exportación exitosa");
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        // Mostrar mensaje de error
+        JOptionPane.showMessageDialog(this, "Error al exportar los datos", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
     }//GEN-LAST:event_btExportar1ActionPerformed
 
     private void btagregarfilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btagregarfilaActionPerformed
